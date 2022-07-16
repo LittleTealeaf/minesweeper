@@ -88,7 +88,7 @@ class Cell {
     }
 
     for(var i = this.row - 1; i <= this.row + 1; i++) {
-      for(var i = this.column - 1; i <= this.column + 1; i++) {
+      for(var j = this.column - 1; j <= this.column + 1; j++) {
         try {
           if(cells[i][j].isState("blank")) {
             cells[i][j].onclick();
@@ -116,7 +116,7 @@ function setMines(row, column) {
   var buffer = [];
   for(var r = 0; r < cells.length; r++) {
     for(var c = 0; c < cells[r].length; c++) {
-      if(r != row || c != column) {
+      if(Math.abs(r - row) > 1 || Math.abs(c - column) > 1) {
         buffer.push(cells[r][c]);
       }
     }
