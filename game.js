@@ -64,7 +64,7 @@ class Cell {
 
     if (this.isState("flag")) return;
 
-    if (!areMinesSet) setMines(this.row, this.column);
+    if (board.dataset.state == "blank") setMines(this.row, this.column);
 
     if(this.bomb) return explode();
 
@@ -108,6 +108,7 @@ function explode() {
       }
     }
   }
+  board.dataset.state = "gameover";
 }
 
 function setMines(row, column) {
@@ -128,11 +129,11 @@ function setMines(row, column) {
     buffer = buffer.filter(data => data != choice);
     choice.bomb = true;
   }
-  areMinesSet = true;
+  board.dataset.state = "playing";
 }
 
 function setBoard(rows, columns) {
-  areMinesSet = false;
+  board.dataset.state = "blank";
   table.innerHTML = "";
   cells = [];
 

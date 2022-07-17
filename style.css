@@ -13,34 +13,9 @@
     color: white;
 }
 
-#board > h1 {
+#board h1 {
     width: 100%;
     text-align: center;
-}
-
-#tool {
-    display: flex;
-    width: fit-content;
-    margin: auto;
-}
-
-#tool div {
-    margin: 20px;
-    padding: 10px;
-    font-size: 30px;
-    margin-bottom: 0px;
-    transition-duration: 0.5s;
-    background-color: rgba(0,0,0,0);
-    cursor: pointer;
-    border-radius: 45%;
-    text-shadow: 0px 0px 20px #0005;
-}
-
-#board[data-tool='🚩'] .flag,
-#board[data-tool='⛏️'] .mine {
-    background-color: rgb(95, 153, 20);
-    transform: scale(1.2);
-    box-shadow: 0px 0px 20px black;
 }
 
 td {
@@ -49,37 +24,53 @@ td {
     height: 30px;
     cursor: default;
     font-size: 20px;
-}
-
-td[data-state="revealed"] {
-    background-color: wheat;
-    color: black;
     text-align: center;
-    cursor: default;
+    background-color: #5e534b;
 }
 
-
-td[data-state="blank"] {
-    cursor:pointer;
-}
-
-td[data-state="blank"],
+td[data-state="unknown"],
 td[data-state="flag"] {
-    background-color: rgb(255, 255, 255);
-}
-
-td[data-state="flag"]:after {
-    content: '🚩';
+    background-color: rgb(158, 152, 141);
 }
 
 td[data-state="exploded"] {
-    background-color: rgb(255, 185, 185);
+    background-color: #585558;
 }
 
-td[data-state="exploded"]:after {
+td[data-state="exploded"]::after {
     content: '🧨'
 }
 
-#board[data-tool='🚩'] td[data-state="flag"] {
+td[data-state="flag"]:after {
+    content: '🚩'
+}
+
+.toolbar {
+    display: flex;
+    width: fit-content;
+    margin: auto;
+}
+
+.toolbar div {
+    margin: 20px;
+    padding: 10px;
+    font-size: 30px;
+    margin-bottom: 0px;
+    transition-duration: 0.5s;
+    background-color: rgba(0,0,0,0);
+    cursor:pointer;
+    border-radius: 45%;
+    text-shadow: 0px 0px 20px #0005;
+}
+
+#board[data-tool="🚩"] .flag,
+#board[data-tool="⛏️"] .mine {
+    background-color: rgb(95, 153, 20);
+    transform: scale(1.2);
+    box-shadow: 0px 0px 20px black;
+}
+
+#board[data-state="playing"] td[data-state="unknown"],
+#board[data-state="playing"][data-tool="🚩"] td[data-state="flag"] {
     cursor: pointer;
 }
