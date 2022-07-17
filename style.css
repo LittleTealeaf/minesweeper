@@ -3,14 +3,29 @@
     min-width: 100px;
     height: fit-content;
     min-height: 100px;
-    padding: 20px;
+    padding: 10px;
     margin: auto;
 
 
     border-radius: 20px;
-    box-shadow: 0px 0px 50px rgba(0,0,0,0.8);
+    box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
     background-color: rgb(71, 55, 43);
     color: white;
+}
+
+#board * {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 #board h1 {
@@ -21,11 +36,14 @@
 td {
     border-radius: 10%;
     width: 30px;
+    min-width: 30px;
+    min-height: 30px;
     height: 30px;
     cursor: default;
     font-size: 20px;
     text-align: center;
     background-color: #5e534b;
+    transition-duration: 0.2s;
 }
 
 td[data-state="unknown"],
@@ -57,11 +75,13 @@ td[data-state="flag"]:after {
     font-size: 30px;
     margin-bottom: 0px;
     transition-duration: 0.5s;
-    background-color: rgba(0,0,0,0);
-    cursor:pointer;
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
     border-radius: 45%;
     text-shadow: 0px 0px 20px #0005;
+    flex-grow: 1;
 }
+
 
 #board[data-tool="🚩"] .flag,
 #board[data-tool="⛏️"] .mine {
@@ -73,4 +93,34 @@ td[data-state="flag"]:after {
 #board[data-state="playing"] td[data-state="unknown"],
 #board[data-state="playing"][data-tool="🚩"] td[data-state="flag"] {
     cursor: pointer;
+}
+
+#board[data-state="gameover"] .toolbar div {
+    transform: scale(0);
+}
+
+
+.score {
+    display: flex;
+}
+
+.timer {
+    flex-grow: 1;
+    color: white;
+    font-size: 30px;
+}
+
+.timer::before {
+    content: '⏱️';
+}
+
+.flagscore {
+    font-size: 30px;
+    flex-grow: 1;
+    text-align: right;
+
+}
+
+.flagscore::after {
+    content: '🚩';
 }

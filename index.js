@@ -26,14 +26,55 @@ class Cell {
   }
 }
 
+class Timer {
+  constructor(parent) {
+    this.element = document.createElement("div");
+    this.element.classList.add("timer");
+    this.instance = null;
+    this.seconds = -1;
+    parent.append(this.element);
+  }
+
+  increment() {
+    this.seconds++;
+
+    const mins = Math.floor(this.seconds / 60);
+    const secs = this.seconds % 60;
+
+    this.element.innerText = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`
+  }
+
+  start() {
+    this.increment();
+    this.instance = setInterval(() => this.increment(), 1000);
+  }
+  stop() {
+    if (this.instance) {
+      clearInterval(this.instance);
+      this.instance = null;
+    }
+  }
+}
+
 class Game {
-  constructor(rows, columns) {
+  constructor(rows, columns, count) {
+    this.count = count;
     this.board = document.getElementById("board");
     this.board.innerHTML = "";
 
     const title = document.createElement("h1");
     title.innerText = "Minesweeper";
     this.board.append(title);
+
+    const score = document.createElement("div");
+    score.classList.add("score");
+    this.board.append(score);
+
+    this.timer = new Timer(score);
+
+    this.flagcount = document.createElement("div");
+    this.flagcount.classList.add("flagscore");
+    score.append(this.flagcount);
 
     this.table = document.createElement("table");
     this.board.append(this.table);
@@ -70,20 +111,44 @@ class Game {
     this.setTool(EMOJI_PICKAXE);
 
     this.setState("newgame");
+    this.updateFlagCount();
+  }
+
+  updateFlagCount() {
+    var correct = 0;
+    var incorrect = 0;
+    for (var r = 0; r < this.cells.length; r++) {
+      for (var c = 0; c < this.cells[r].length; c++) {
+        if (!this.cells[r][c].isState("flag")) continue;
+
+        if (this.cells[r][c].bomb) {
+          correct++;
+        } else {
+          incorrect++;
+        }
+      }
+    }
+    this.flagcount.innerText = `${correct + incorrect}/${this.count}`;
   }
 
   onclick(cell) {
-    if(this.isState("gameover")) return;
+    if (this.isState("gameover")) return;
 
     if (this.isTool(EMOJI_FLAG)) {
-      if (cell.isState("unknown")) return cell.setState("flag");
-      if (cell.isState("flag")) return cell.setState("unknown");
+      if (this.isState("newgame")) return;
+      if (cell.isState("revealed")) return;
+
+      //toggles the state
+      cell.setState(cell.isState("flag") ? "unknown" : "flag");
+
+      this.updateFlagCount();
+
       return;
     }
 
-    if (cell.isState("flag")) return;
-
     if (this.isState("newgame")) this.placeMines(cell);
+
+    if (cell.isState("flag")) return;
 
     if (cell.bomb) return this.explode();
 
@@ -115,7 +180,7 @@ class Game {
   }
 
   placeMines(origin) {
-    var count = (this.cells.length * this.cells[0].length) / 5;
+    this.timer.start();
 
     var buffer = [];
     for (var r = 0; r < this.cells.length; r++) {
@@ -125,7 +190,7 @@ class Game {
         }
       }
     }
-    for (var i = 0; i < count; i++) {
+    for (var i = 0; i < this.count; i++) {
       const index = Math.floor(Math.random() * buffer.length);
       const choice = buffer[index];
       buffer = buffer.filter((data) => data != choice);
@@ -160,6 +225,7 @@ class Game {
   }
 
   explode() {
+    this.timer.stop();
     for (var r = 0; r < this.cells.length; r++) {
       for (var c = 0; c < this.cells[r].length; c++) {
         if (this.cells[r][c].bomb && this.cells[r][c].isState("unknown")) {
@@ -171,4 +237,4 @@ class Game {
   }
 }
 
-new Game(10, 10);
+new Game(10, 10, 20);
